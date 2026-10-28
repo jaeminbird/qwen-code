@@ -32,8 +32,11 @@ for the main executable server JAR, without attaching the auxiliary operator
 JARs. Ordinary builds keep the existing attachments and do not activate Central
 publishing. The protected `Release Managed server runtime` workflow sets the
 artifact version from an existing CLI release tag and publishes identical JAR
-bytes to Central, GitHub Release assets and the official OSS mirror. The CLI's
-first-use download uses OSS/GitHub and requires no Maven installation. See the
+bytes and checksums to GitHub Release assets and the official OSS mirror after
+full SDK/server verification. Distribution does not require Central credentials,
+GPG signing or a successful Central publication. Signed Maven publication remains
+an independent operation using the existing profile. The CLI's first-use download
+uses OSS/GitHub and requires no Maven installation. See the
 [release procedure](../../docs/users/managed-local-serve.md#publish-the-first-use-jar)
 and its [Chinese version](../../docs/users/managed-local-serve.zh-CN.md#发布首次使用的-jar).
 

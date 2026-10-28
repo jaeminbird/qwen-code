@@ -204,11 +204,16 @@ CLI 和 Java 模块，构建 `central-release` profile，并将 JAR 与校验文
 workflow artifact，不修改公开仓库。
 
 验证 dry-run 后，发行运维可通过受保护的 `production-release` environment，用
-相同 tag 和 `dry_run=false` 运行。workflow 将服务制品版本设为 CLI 版本，向
-Maven Central 发布 `com.alibaba:qwen-managed-agent-server:<cli-version>` 及源码、
-Javadoc 和签名，再将相同主 JAR 及其 `.sha256` 分发到该 GitHub Release 和现有的
-版本化 OSS 镜像。辅助运维 JAR 不附加到 Central 发布。已有产物逐字节比较，绝不
+相同 tag 和 `dry_run=false` 运行。workflow 将服务制品版本设为 CLI 版本，
+将验证后的主 JAR 及其 `.sha256` 分发到该 GitHub Release 和现有的版本化 OSS
+镜像，再将两个公开下载渠道的制品与暂存字节核对。已有产物逐字节比较，绝不
 用不同内容替换。公开的 CLI release 事件也会自动运行该 workflow。
+
+runtime 分发需要现有 OSS 上传凭据和 GitHub release 权限，无需 Central 发布凭据或
+GPG 私钥，不探测服务坐标在 Central 上是否存在，不向 Central 发布或等待其完成。
+Maven 仍负责构建和完整验证 SDK 与服务，正常依赖解析保持不变。
+需要签名发布 Maven 制品时，可独立使用现有 `central-release`
+profile；该操作不阻塞 runtime 交付。
 
 CLI 从 OSS/GitHub 下载，不从 Maven Central 下载，也不要求用户单独解析 SDK：
 可执行服务 JAR 包含其 Java 依赖。精确匹配 CLI release 的 runtime 产物必须已存在，
